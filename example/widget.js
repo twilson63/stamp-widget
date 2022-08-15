@@ -72,6 +72,10 @@
   function empty() {
     return text("");
   }
+  function listen(node, event, handler, options) {
+    node.addEventListener(event, handler, options);
+    return () => node.removeEventListener(event, handler, options);
+  }
   function attr(node, attribute, value) {
     if (value == null)
       node.removeAttribute(attribute);
@@ -298,7 +302,7 @@
     }
     component.$$.dirty[i / 31 | 0] |= 1 << i % 31;
   }
-  function init(component, options, instance, create_fragment2, not_equal, props, append_styles2, dirty = [-1]) {
+  function init(component, options, instance2, create_fragment2, not_equal, props, append_styles2, dirty = [-1]) {
     const parent_component = current_component;
     set_current_component(component);
     const $$ = component.$$ = {
@@ -321,7 +325,7 @@
     };
     append_styles2 && append_styles2($$.root);
     let ready = false;
-    $$.ctx = instance ? instance(component, options.props || {}, (i, ret, ...rest) => {
+    $$.ctx = instance2 ? instance2(component, options.props || {}, (i, ret, ...rest) => {
       const value = rest.length ? rest[0] : ret;
       if ($$.ctx && not_equal($$.ctx[i], $$.ctx[i] = value)) {
         if (!$$.skip_bound && $$.bound[i])
@@ -424,29 +428,123 @@
 
   // src/Widget.svelte
   function add_css(target) {
-    append_styles(target, "svelte-my6c1j", "h1.svelte-my6c1j{color:green;background-color:lightyellow}div.svelte-my6c1j{font-size:6em}");
+    append_styles(target, "svelte-1xkhbrx", '.card.svelte-1xkhbrx.svelte-1xkhbrx{font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,\n      "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,\n      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",\n      "Noto Color Emoji";height:250px;width:200px;background-color:rebeccapurple;color:white;display:flex;flex-direction:column;border-radius:8px;margin-top:8px;align-items:center}.card-title.svelte-1xkhbrx.svelte-1xkhbrx{font-size:2em;margin-top:16px}.card-body.svelte-1xkhbrx.svelte-1xkhbrx{font-size:3em;margin-top:16px;margin-bottom:16px}.card-buttons.svelte-1xkhbrx.svelte-1xkhbrx{display:flex;flex-direction:column}.btn.svelte-1xkhbrx.svelte-1xkhbrx{display:inline-flex;flex-wrap:wrap;flex-shrink:0;background-color:black;color:white;border-radius:8px;padding:4px 12px;cursor:pointer;border-color:rebeccapurple;height:32px;align-items:center;justify-content:center;margin-top:8px;font-weight:600}.container.svelte-1xkhbrx.svelte-1xkhbrx{font-family:ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,\n      "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,\n      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",\n      "Noto Color Emoji";border:2px solid;border-radius:8px;display:flex;width:200px;align-items:center;justify-items:center;height:24px}div.svelte-1xkhbrx #heading1.svelte-1xkhbrx{margin:0px;height:100%;flex:1 1 auto;background-color:rebeccapurple;color:white;text-align:center}div.svelte-1xkhbrx #count.svelte-1xkhbrx{flex:1 1 auto;text-align:center;font-weight:700}');
   }
   function create_catch_block(ctx) {
     return { c: noop, m: noop, p: noop, d: noop };
   }
   function create_then_block(ctx) {
-    let div;
-    let t_value = ctx[0] + "";
-    let t;
+    let div2;
+    let div0;
+    let t1;
+    let div1;
+    let t2_value = ctx[2] + "";
+    let t2;
+    let t3;
+    let if_block_anchor;
+    let mounted;
+    let dispose;
+    let if_block = ctx[0] && create_if_block(ctx);
     return {
       c() {
-        div = element("div");
-        t = text(t_value);
-        attr(div, "class", "svelte-my6c1j");
+        div2 = element("div");
+        div0 = element("div");
+        div0.textContent = "stamps";
+        t1 = space();
+        div1 = element("div");
+        t2 = text(t2_value);
+        t3 = space();
+        if (if_block)
+          if_block.c();
+        if_block_anchor = empty();
+        attr(div0, "id", "heading1");
+        attr(div0, "class", "svelte-1xkhbrx");
+        attr(div1, "id", "count");
+        attr(div1, "class", "svelte-1xkhbrx");
+        attr(div2, "class", "container svelte-1xkhbrx");
       },
       m(target, anchor) {
-        insert(target, div, anchor);
-        append(div, t);
+        insert(target, div2, anchor);
+        append(div2, div0);
+        append(div2, t1);
+        append(div2, div1);
+        append(div1, t2);
+        insert(target, t3, anchor);
+        if (if_block)
+          if_block.m(target, anchor);
+        insert(target, if_block_anchor, anchor);
+        if (!mounted) {
+          dispose = listen(div2, "click", ctx[1]);
+          mounted = true;
+        }
+      },
+      p(ctx2, dirty) {
+        if (ctx2[0]) {
+          if (if_block) {
+            if_block.p(ctx2, dirty);
+          } else {
+            if_block = create_if_block(ctx2);
+            if_block.c();
+            if_block.m(if_block_anchor.parentNode, if_block_anchor);
+          }
+        } else if (if_block) {
+          if_block.d(1);
+          if_block = null;
+        }
+      },
+      d(detaching) {
+        if (detaching)
+          detach(div2);
+        if (detaching)
+          detach(t3);
+        if (if_block)
+          if_block.d(detaching);
+        if (detaching)
+          detach(if_block_anchor);
+        mounted = false;
+        dispose();
+      }
+    };
+  }
+  function create_if_block(ctx) {
+    let div3;
+    let div0;
+    let t1;
+    let div1;
+    let t2_value = ctx[2] + "";
+    let t2;
+    let t3;
+    let div2;
+    return {
+      c() {
+        div3 = element("div");
+        div0 = element("div");
+        div0.textContent = "Stamps";
+        t1 = space();
+        div1 = element("div");
+        t2 = text(t2_value);
+        t3 = space();
+        div2 = element("div");
+        div2.innerHTML = `<button class="btn svelte-1xkhbrx">STAMP</button> 
+        <button class="btn svelte-1xkhbrx">LEARN MORE</button>`;
+        attr(div0, "class", "card-title svelte-1xkhbrx");
+        attr(div1, "class", "card-body svelte-1xkhbrx");
+        attr(div2, "class", "card-buttons svelte-1xkhbrx");
+        attr(div3, "class", "card svelte-1xkhbrx");
+      },
+      m(target, anchor) {
+        insert(target, div3, anchor);
+        append(div3, div0);
+        append(div3, t1);
+        append(div3, div1);
+        append(div1, t2);
+        append(div3, t3);
+        append(div3, div2);
       },
       p: noop,
       d(detaching) {
         if (detaching)
-          detach(div);
+          detach(div3);
       }
     };
   }
@@ -454,8 +552,6 @@
     return { c: noop, m: noop, p: noop, d: noop };
   }
   function create_fragment(ctx) {
-    let h1;
-    let t1;
     let await_block_anchor;
     let promise;
     let info = {
@@ -466,21 +562,15 @@
       pending: create_pending_block,
       then: create_then_block,
       catch: create_catch_block,
-      value: 0
+      value: 2
     };
     handle_promise(promise = getCount("BA91BsbcwCQi2ZaL1p8TojAny-lfHYAbR3mRSIxYfjE"), info);
     return {
       c() {
-        h1 = element("h1");
-        h1.textContent = "Stamp Count";
-        t1 = space();
         await_block_anchor = empty();
         info.block.c();
-        attr(h1, "class", "svelte-my6c1j");
       },
       m(target, anchor) {
-        insert(target, h1, anchor);
-        insert(target, t1, anchor);
         insert(target, await_block_anchor, anchor);
         info.block.m(target, info.anchor = anchor);
         info.mount = () => await_block_anchor.parentNode;
@@ -494,10 +584,6 @@
       o: noop,
       d(detaching) {
         if (detaching)
-          detach(h1);
-        if (detaching)
-          detach(t1);
-        if (detaching)
           detach(await_block_anchor);
         info.block.d(detaching);
         info.token = null;
@@ -505,10 +591,17 @@
       }
     };
   }
+  function instance($$self, $$props, $$invalidate) {
+    let cardVisible = false;
+    function toggleCard() {
+      $$invalidate(0, cardVisible = !cardVisible);
+    }
+    return [cardVisible, toggleCard];
+  }
   var Widget = class extends SvelteComponent {
     constructor(options) {
       super();
-      init(this, options, null, create_fragment, safe_not_equal, {}, add_css);
+      init(this, options, instance, create_fragment, safe_not_equal, {}, add_css);
     }
   };
   var Widget_default = Widget;

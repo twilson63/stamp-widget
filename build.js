@@ -8,6 +8,13 @@ esbuild
     bundle: true,
     outfile: 'example/widget.js',
     plugins: [sveltePlugin({ compilerOptions: { css: true } })],
-    logLevel: 'info'
+    logLevel: 'info',
+    watch: {
+      onRebuild(error, result) {
+        if (error) console.error('watch build failed:', error)
+        else console.log('watch build succeeded:', result)
+      },
+    }
   })
+  .then(() => console.log('watching...'))
   .catch(() => process.exit(1))
