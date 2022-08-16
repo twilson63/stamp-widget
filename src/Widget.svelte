@@ -1,13 +1,22 @@
 <script>
-  import { getCount } from "./lib/stamps.js";
+  import { getCount, stamp } from "./lib/stamps.js";
+
+  export let contract;
+  export let address;
 
   let cardVisible = false;
   function toggleCard() {
     cardVisible = !cardVisible;
   }
+
+  async function doStamp() {
+    stampCount = await stamp(contract, address).then(() => getCount(contract));
+  }
+
+  let stampCount = getCount(contract);
 </script>
 
-{#await getCount("BA91BsbcwCQi2ZaL1p8TojAny-lfHYAbR3mRSIxYfjE") then count}
+{#await stampCount then count}
   <div class="container" on:click={toggleCard}>
     <div id="heading1">stamps</div>
     <div id="count">{count}</div>
@@ -17,7 +26,7 @@
       <div class="card-title">Stamps</div>
       <div class="card-body">{count}</div>
       <div class="card-buttons">
-        <button class="btn">STAMP</button>
+        <button class="btn" on:click={doStamp}>STAMP</button>
         <button class="btn">LEARN MORE</button>
       </div>
     </div>
